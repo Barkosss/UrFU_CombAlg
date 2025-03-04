@@ -58,22 +58,28 @@ public:
         tailNode->nextElement = new ArrayNode(tailNode->index + 1, element);
         tailNode = tailNode->nextElement;
     }
+
+    void push(Array<ArrayType> array) {
+
+    }
 };
 
 template<typename MatrixType>
 class Matrix {
 private:
-    Array<MatrixType> array;
+    Array<Array<MatrixType>> array;
 
 public:
     Matrix<MatrixType>(): array(nullptr) {}
 
+    void addColumn(Array<MatrixType> column) {
+        array.push(column);
+    }
 };
 
 int main() {
     Array<bool> columns = Array<bool>(nullptr);
     Matrix<bool> matrix = Matrix<bool>();
-
 
     columns.push(true);
     matrix;
