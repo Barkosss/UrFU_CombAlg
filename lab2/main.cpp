@@ -6,83 +6,108 @@
  * Метод решения: Поиск в ширину.
  */
 
+#include<algorithm>
 #include<iostream>
+#include<fstream>
+#include<vector>
+#include<queue>
+#include<set>
 
 using std::cin;
 using std::cout;
 using std::endl;
+using std::ifstream;
+using std::ofstream;
+using std::vector;
+using std::queue;
+using std::pair;
+using std::set;
 
-template<typename Type>
-struct ArrayNode {
-    unsigned index;
-    Type element;
+vector<int> findCycle(const vector<vector<int>> &matrix, int indexVert) {
+    unsigned int matrixLen = matrix.size();
+    vector<int> parent(matrixLen, -1);
+    vector<bool> visited(matrixLen, false);
+    queue<int> q;
 
-    ArrayNode* nextElement;
+    q.push(indexVert);
+    visited[indexVert] = true;
 
-    ArrayNode(Type element): index(0), element(element), nextElement(nullptr) {}
-    ArrayNode(unsigned index, Type element): index(index), element(element), nextElement(nullptr) {}
-};
+    while (!q.empty()) {
+        int vertex = q.front();
+        q.pop();
 
-template<typename ArrayType>
-class Array {
-private:
-    ArrayNode<ArrayType>* headNode;
-    ArrayNode<ArrayType>* tailNode;
+        for (int neighbour = 0; neighbour < matrixLen; neighbour++) {
+            if (matrix[vertex][neighbour]) {
+                if (!visited[neighbour]) {
+                    visited[neighbour] = true;
+                    parent[neighbour] = vertex;
+                    q.push(neighbour);
+                } else if (parent[vertex] != neighbour) {
+                    vector<int> cycle;
+                    cycle.push_back(vertex);
+                    cycle.push_back(neighbour);
 
-public:
-    Array<ArrayType>(nullptr_t pVoid) : headNode(nullptr), tailNode(nullptr) {}
+                    while (true) {
+                        vertex = parent[vertex];
+                        if (std::find(cycle.begin(), cycle.end(), vertex) != cycle.end()) break;
+                        cycle.push_back(vertex);
 
-    ArrayType operator()(unsigned index) {
-        ArrayNode<ArrayType>* node = headNode;
-        while (node->index != index) {
-            node = node->nextElement;
+                        neighbour = parent[neighbour];
+                        if (std::find(cycle.begin(), cycle.end(), neighbour) != cycle.end()) break;
+                        cycle.push_back(neighbour);
+                    }
+
+                    std::sort(cycle.begin(), cycle.end());
+                    return cycle;
+                }
+            }
         }
-        return node->element;
     }
 
-    ArrayType get(unsigned index) {
-        return this(index);
+    return {};
+}
+
+
+void isAcyclic(const vector<vector<int>> &matrix) {
+    ofstream outFile("out.txt");
+
+    if (!outFile.is_open()) {
+        cout << "Error opening output file" << endl;
+        return;
     }
 
-    bool isEmpty() {
-        return headNode == nullptr;
-    }
+    unsigned int matrixLen = matrix.size();
 
-    void push(ArrayType element) {
-        if (this->isEmpty()) {
-            headNode = new ArrayNode(element);
-            tailNode = headNode;
+    for (int indexVert = 0; indexVert < matrixLen; indexVert++) {
+        vector<int> cycle = findCycle(matrix, indexVert);
+        if (!cycle.empty()) {
+            outFile << "N" << endl;
+            for (int elem: cycle) outFile << elem + 1 << " ";
             return;
         }
-
-        tailNode->nextElement = new ArrayNode(tailNode->index + 1, element);
-        tailNode = tailNode->nextElement;
     }
 
-    void push(Array<ArrayType> array) {
+    outFile << "A" << endl;
+}
 
-    }
-};
-
-template<typename MatrixType>
-class Matrix {
-private:
-    Array<Array<MatrixType>> array;
-
-public:
-    Matrix<MatrixType>(): array(nullptr) {}
-
-    void addColumn(Array<MatrixType> column) {
-        array.push(column);
-    }
-};
 
 int main() {
-    Array<bool> columns = Array<bool>(nullptr);
-    Matrix<bool> matrix = Matrix<bool>();
+    ifstream inFile("in.txt");
 
-    columns.push(true);
-    matrix;
+    if (!inFile.is_open()) {
+        cout << "File is not open" << endl;
+        return 404;
+    }
 
+    int count;
+    inFile >> count;
+    vector<vector<int>> matrix(count, vector<int>(count));
+    for (int index = 0; index < count; index++) {
+        for (int jndex = 0; jndex < count; jndex++) {
+            inFile >> matrix[index][jndex];
+        }
+    }
+
+    isAcyclic(matrix);
     return 0;
 }
