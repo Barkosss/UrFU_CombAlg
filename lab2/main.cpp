@@ -109,5 +109,7 @@ int main() {
     }
 
     isAcyclic(matrix);
+
+    cout << "Program is complete" << endl;
     return 0;
 }
