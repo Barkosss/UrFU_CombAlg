@@ -8,45 +8,48 @@
  */
 
 #include<iostream>
-#include<string>
+#include<fstream>
+#include<vector>
 
 using std::cin;
 using std::cout;
 using std::endl;
+using std::pair;
 using std::string;
+using std::vector;
+using std::ifstream;
+using std::ofstream;
 
-struct Node {
-    string coordination;
+struct Point {
+    char letter;
+    short number;
 
-    Node* nextMove;
-
-    Node(string coordination): coordination(coordination), nextMove(nullptr);
+    Point(string point): letter(point[0]), number((short)point[1]) {};
 };
 
-class Grath {
-private:
-    Node* root
+pair<bool, vector<string>> canAttack(Point pawn, Point horse) {
 
-public:
-    Grath(): root(nullptr);
 
-    bool isEmpty() {
-        return root == nullptr;
+    return make_pair(false, vector<string>{});
+}
+
+int main() {
+    ifstream inFile("in.txt");
+    ofstream outFile("out.txt");
+
+    string pawnPoint, horsePoint;
+    inFile >> pawnPoint;
+    inFile >> horsePoint;
+
+    pair<bool, vector<string>> isAttacked = canAttack(Point(pawnPoint), Point(horsePoint));
+
+    if (isAttacked.first) {
+        outFile << "" << endl;
+    } else {
+        outFile << "" << endl;
     }
 
-    void push(string coordination) {
+    cout << "" << endl;
 
-        if (isEmpty()) {
-            root = new Node(coordination);
-            return;
-        }
-
-
-    }
-};
-
-
-void main() {
-
-
+    return 0;
 }
