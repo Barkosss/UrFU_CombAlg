@@ -10,27 +10,40 @@
 #include<iostream>
 #include<fstream>
 #include<vector>
+#include<deque>
 
 using std::cin;
 using std::cout;
 using std::endl;
 using std::pair;
+using std::deque;
 using std::string;
 using std::vector;
 using std::ifstream;
 using std::ofstream;
 
-struct Point {
-    char letter;
-    short number;
-
-    Point(string point): letter(point[0]), number((short)point[1]) {};
+enum class Shift {
+    UP_LEFT, UP_RIGHT,
+    LEFT_UP, LEFT_DOWN,
+    RIGHT_UP, RIGHT_LEFT,
+    DOWN_LEFT, DOWN_RIGHT
 };
 
-pair<bool, vector<string>> canAttack(Point pawn, Point horse) {
+struct Point {
+    short letter;
+    short number;
 
+    Point(string point): letter((short)point[0] - 97), number((short)point[1] - 49) {};
 
-    return make_pair(false, vector<string>{});
+    Point getShift(Point point, Shift shift) {
+        switch shift {
+            case UP_LEFT -> Point(point.)
+        }
+    }
+};
+
+vector<string> findMoveToAttack(Point pawn, Point horse) {
+
 }
 
 int main() {
@@ -41,15 +54,11 @@ int main() {
     inFile >> pawnPoint;
     inFile >> horsePoint;
 
-    pair<bool, vector<string>> isAttacked = canAttack(Point(pawnPoint), Point(horsePoint));
+    vector<string> attacked = findMoveToAttack(Point(pawnPoint), Point(horsePoint));
 
-    if (isAttacked.first) {
-        outFile << "" << endl;
-    } else {
-        outFile << "" << endl;
+    for (string move : attacked) {
+        outFile << move << endl;
     }
-
-    cout << "" << endl;
 
     return 0;
 }
