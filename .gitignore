@@ -1,2 +1,52 @@
 .idea
 *.txt
+
+# ========== Общие IDE ==========
+.idea/
+*.iml
+
+# ========== CMake ==========
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+build/
+build-*/
+
+# ========== CLion ==========
+cmake-build-*/
+*.user
+
+# ========== Visual Studio (если используешь CLion с MSVC) ==========
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+
+# ========== Генерируемые файлы ==========
+compile_commands.json
+Testing/
+CTestTestfile.cmake
+test_detail.xml
+
+# ========== Бинарники ==========
+*.exe
+*.out
+*.obj
+*.o
+*.a
+*.lib
+*.dll
+*.so
+*.dylib
+
+# ========== Логи и временные файлы ==========
+*.log
+*.tmp
+*.swp
+*.swo
+
+# ========== Системные ==========
+.DS_Store
+Thumbs.db
+desktop.ini
