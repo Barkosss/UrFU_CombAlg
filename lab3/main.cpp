@@ -11,11 +11,19 @@
 
 #include<iostream>
 #include<fstream>
+#include<vector>
 
 using std::cout;
 using std::endl;
+using std::vector;
 using std::ofstream;
 using std::ifstream;
+
+const int INF = -32768;
+
+vector<int> longestPath() {
+    // ...
+}
 
 int main() {
     ifstream inFile("in.txt");
@@ -26,5 +34,27 @@ int main() {
         return 404;
     }
 
-    // ...
+    unsigned int matrixSize;
+    inFile >> matrixSize;
+
+    vector<vector<int>> matrix = vector<vector<int>>(matrixSize, vector<int>(matrixSize));
+    for (unsigned int index = 0; index < matrixSize; index++) {
+        for (unsigned int jndex = 0; jndex < matrixSize; jndex++) {
+            inFile >> matrix[index][jndex];
+        }
+    }
+
+    unsigned int start, target;
+    inFile >> start >> target;
+
+    vector<int> result = longestPath();
+
+    if (result[target] == INF) {
+        outFile << "N" << endl;
+    } else {
+        outFile << "Y" << endl;
+        /// ...
+    }
+
+    return 0;
 }
