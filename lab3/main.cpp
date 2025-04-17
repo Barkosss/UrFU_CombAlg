@@ -12,16 +12,21 @@
 #include<iostream>
 #include<fstream>
 #include<vector>
+#include<limits>
+#include<deque>
 
 using std::cout;
 using std::endl;
+using std::deque;
 using std::vector;
 using std::ofstream;
 using std::ifstream;
 
-const int INF = -32768;
+const int NO_EDGE = -32768;
 
-vector<int> longestPath() {
+vector<int> longestPath(vector<vector<int>> matrix, int start, int target) {
+    // ...
+    // ...
     // ...
 }
 
@@ -47,14 +52,24 @@ int main() {
     unsigned int start, target;
     inFile >> start >> target;
 
-    vector<int> result = longestPath();
+    vector<int> path = longestPath(matrix, start, target);
 
-    if (result[target] == INF) {
-        outFile << "N" << endl;
-    } else {
-        outFile << "Y" << endl;
-        /// ...
+    if (path.empty()) {
+        cout << "N" << endl;
+        return 0;
     }
+
+    cout << "Y" << endl;
+    for (int node: path) {
+        cout << node << " ";
+    }
+    cout << endl;
+
+    int totalWeight = 0;
+    for (int index = 0; index < path.size(); index++) {
+        totalWeight += matrix[path[index]][path[index + 1]];
+    }
+    cout << totalWeight << endl;
 
     return 0;
 }
