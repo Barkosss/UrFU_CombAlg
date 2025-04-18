@@ -12,22 +12,53 @@
 #include<iostream>
 #include<fstream>
 #include<vector>
-#include<limits>
+#include<stack>
 #include<deque>
 
 using std::cout;
 using std::endl;
 using std::deque;
+using std::stack;
 using std::vector;
 using std::ofstream;
 using std::ifstream;
 
 const int NO_EDGE = -32768;
+vector<vector<int>> matrix;
+vector<bool> visited;
+stack<int> topPath;
+vector<int> parent;
+vector<int> weight;
 
-vector<int> longestPath(vector<vector<int>> matrix, int start, int target) {
-    // ...
-    // ...
-    // ...
+void topSort(int v) {
+    visited[v] = true;
+    for (int node = 0; node < matrix.size(); node++) {
+        if (matrix[v][node] != NO_EDGE && !visited[node]) {
+            topSort(node);
+        }
+    }
+
+    topPath.push(v);
+}
+
+void longestPath(int start) {
+    weight[start] = 0;
+
+    while (!topPath.empty()) {
+        int u = topPath.top();
+        topPath.pop();
+
+        if (weight[u] == NO_EDGE) continue;
+
+        for (int column = 0; column < matrix.size(); column++) {
+            if (matrix[u][column] != NO_EDGE) {
+                if (weight[u] + matrix[u][column] > weight[column]) {
+                    weight[column] = weight[u] + matrix[u][column];
+                    parent[column] = u;
+                }
+            }
+        }
+    }
 }
 
 int main() {
@@ -42,7 +73,11 @@ int main() {
     unsigned int matrixSize;
     inFile >> matrixSize;
 
-    vector<vector<int>> matrix = vector<vector<int>>(matrixSize, vector<int>(matrixSize));
+    matrix = vector<vector<int>>(matrixSize, vector<int>(matrixSize));
+    visited = vector<bool>(matrixSize, false);
+    weight = vector<int>(matrixSize, NO_EDGE);
+    parent = vector<int>(matrixSize, -1);
+
     for (unsigned int index = 0; index < matrixSize; index++) {
         for (unsigned int jndex = 0; jndex < matrixSize; jndex++) {
             inFile >> matrix[index][jndex];
@@ -51,25 +86,31 @@ int main() {
 
     unsigned int start, target;
     inFile >> start >> target;
+    start--; target--;
 
-    vector<int> path = longestPath(matrix, start, target);
+    for (int node = 0; node < matrixSize; node++) {
+        if (!visited[node]) {
+            topSort(node);
+        }
+    }
 
-    if (path.empty()) {
-        cout << "N" << endl;
+    longestPath(start);
+
+    if (weight[target] == NO_EDGE) {
+        outFile << "N" << endl;
         return 0;
     }
 
-    cout << "Y" << endl;
-    for (int node: path) {
-        cout << node << " ";
-    }
-    cout << endl;
+    outFile << "Y" << endl;
+    deque<int> path;
+    for (int cur = target; cur != -1; cur = parent[cur])
+        path.push_front(cur + 1);
 
-    int totalWeight = 0;
-    for (int index = 0; index < path.size(); index++) {
-        totalWeight += matrix[path[index]][path[index + 1]];
-    }
-    cout << totalWeight << endl;
+    for (int index = 0; index < path.size(); index++)
+        outFile << path[index] << " ";
+    outFile << endl;
+
+    outFile << weight[target] << endl;
 
     return 0;
 }
