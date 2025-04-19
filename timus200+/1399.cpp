@@ -62,7 +62,7 @@ public:
 
 int main() {
     ifstream inFile("in.txt");
-    ofstream outFile("in.txt");
+    ofstream outFile("out.txt");
 
     int countClient, countItems, truckLoad;
     inFile >> countClient >> countItems >> truckLoad;
