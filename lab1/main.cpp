@@ -72,6 +72,21 @@ struct Point {
         return isValidVertically && isValidHorizontally;
     }
 
+    bool isAttack(Point targetPoint) {
+        // Attack down-left
+        if (targetPoint.letter - 1 == this->letter && targetPoint.number - 1 == this->number) {
+            cout << "Was attack" << endl;
+            return true;
+        }
+
+        // Attack down-rights
+        if (targetPoint.letter + 1== this->letter && targetPoint.number - 1 == this->number) {
+            return true;
+        }
+
+        return false;
+    }
+
     string toString() const {
         return string(1, (char) (letter + 'a')) + std::to_string(number + 1);
     }
@@ -80,6 +95,11 @@ struct Point {
 bool dfs(Point currentPoint, Point targetPoint, vector<vector<bool>> &visited, vector<string> &path) {
     // Если вышли за пределы доски или начали ходить по кругу
     if (!currentPoint.isValid() || visited[currentPoint.letter][currentPoint.number]) {
+        return false;
+    }
+
+    // Если следующий (current) ход попадёт под удар пешки
+    if (currentPoint.isAttack(targetPoint)) {
         return false;
     }
 

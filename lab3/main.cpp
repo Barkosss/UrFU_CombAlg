@@ -27,9 +27,12 @@ const int NO_EDGE = -32768;
 vector<vector<int>> matrix;
 vector<bool> visited;
 stack<int> topPath;
+vector<int> newIndexPath;
 vector<int> parent;
 vector<int> weight;
 
+// TODO: А что если не отсортированная сеть?
+// TODO: Присвоение новых номеров
 void topSort(int v) {
     visited[v] = true;
     for (int node = 0; node < matrix.size(); node++) {
@@ -41,12 +44,31 @@ void topSort(int v) {
     topPath.push(v);
 }
 
+// Назначение новых индексов
+void newIndexes() {
+    newIndexPath = vector<int>(topPath.size(), NO_EDGE);
+    int index, newIndex = 1;
+    while (!topPath.empty()) {
+        index = topPath.top(); topPath.pop();
+        newIndexPath[index] = newIndex++;
+    }
+}
+
+
+/*
+ * Изменение индексов у вершин после топологической сортировки
+ * Посчитать количество истоков
+ * Задача:
+ *  1. Найти вернишу с нулевым истоком, и приравнять её максимальному номеру
+ *
+ */
 void longestPath(int start) {
     weight[start] = 0;
 
-    while (!topPath.empty()) {
-        int u = topPath.top();
-        topPath.pop();
+    for (int index = 0; index < newIndexPath.size(); index++) {
+        int u = newIndexPath[index];
+        //int u = topPath.top();
+        //topPath.pop();
 
         if (weight[u] == NO_EDGE) continue;
 
@@ -86,13 +108,16 @@ int main() {
 
     unsigned int start, target;
     inFile >> start >> target;
-    start--; target--;
+    start--;
+    target--;
 
     for (int node = 0; node < matrixSize; node++) {
         if (!visited[node]) {
             topSort(node);
         }
     }
+
+    newIndexes();
 
     longestPath(start);
 
