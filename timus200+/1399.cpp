@@ -18,15 +18,45 @@ struct Node {
 
 class Graph {
 private:
-    Node *root;
+    vector<Node *> nodes;
 
 public:
+    unsigned int size;
+
     Graph(const vector<vector<unsigned int>> matrix) {
         int matrixSize = matrix.size();
+
+        for (int index = 0; index < matrixSize; index++) {
+            nodes.push_back(new Node(index));
+        }
+
+        for (int index = 0; index < matrixSize; index++) {
+            for (int jndex = 0; jndex < matrixSize; jndex++) {
+                if (matrix[index][jndex]) {
+                    nodes[index]->neighbors.push_back(nodes[jndex]);
+                }
+            }
+        }
     }
 
     ~Graph() {
-        delete root;
+        for (Node *node: nodes) {
+            delete node;
+        }
+    }
+
+    void setSize(unsigned int size_) {
+        this->size = size_;
+    }
+
+    void show() const {
+        for (const auto &node: nodes) {
+            std::cout << "Node #" << node->id << " connect with: ";
+            for (const auto &neighbor: node->neighbors) {
+                std::cout << neighbor->id << " ";
+            }
+            std::cout << std::endl;
+        }
     }
 };
 
@@ -45,6 +75,8 @@ int main() {
     }
 
     Graph graph = Graph(matrix);
+
+    graph.show();
 
     return 0;
 }
